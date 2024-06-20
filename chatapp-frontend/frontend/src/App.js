@@ -1,28 +1,29 @@
 import './App.css';
-import { ChatArea } from './Components/ChatArea';
+import ChatArea from './Components/ChatArea';
 import { Login } from './Components/Login';
-import { Navigate } from './Components/Navigate';
+import { MyNavigate } from './Components/MyNavigate';
 import { Register } from './Components/Register';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import { Sidebar } from './Components/Sidebar';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from './Components/Sidebar';
 
 function App() {
   return (
-    <>
-    <div className='chat-container'>
-    <Sidebar />
-      <ChatArea />
-    </div>    
-
-    </>
-
-    // <Router>
-    //   <Navigate />
-    //   <Routes>
-    //     <Route path='/register' element={<Register />}></Route>
-    //     <Route path='/login' element={<Login />}></Route>
-    //   </Routes>
-    // </Router>
+    <Router>
+      <MyNavigate />
+      <Routes>
+        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
+        <Route
+          path='/chat'
+          element={
+            <div className='chat-container'>
+              <Sidebar />
+              <ChatArea />
+            </div>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
