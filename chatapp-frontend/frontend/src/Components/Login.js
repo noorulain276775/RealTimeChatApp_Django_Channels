@@ -28,6 +28,8 @@ export const Login = () => {
       })
       .then(data => {
         console.log(data)
+        const token = data.token;
+        document.cookie = `token=${token}; path=/`
         setErrors("");
       })
       .catch(error => {
