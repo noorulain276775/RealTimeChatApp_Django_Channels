@@ -1,3 +1,4 @@
+from channels.db import database_sync_to_async
 import jwt
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from rest_framework.authentication import BaseAuthentication
@@ -35,6 +36,22 @@ class JWTAuthentication(BaseAuthentication):
         if current_time > exp_timestamp:
             raise ExpiredSignatureError("The token has expired")
     
+    @database_sync_to_async
+    def authenticate_websocket(self, scope, token):
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            self.verify_token(payload=payload)
+            user_id = payload['id']
+            user = MyUser.objects.get(id=user_id)
+            return user 
+        except InvalidTokenError as e:
+            raise AuthenticationFailed("Invalid token")
+        except ExpiredSignatureError as e:
+            raise AuthenticationFailed("Invalid token")
+        except MyUser.DoesNotExist as e:
+            raise AuthenticationFailed("Invalid token")
+        except Exception as e:
+            raise AuthenticationFailed("Invalid token")
 
     @staticmethod
     def generate_token(payload):
